@@ -107,10 +107,10 @@ public class Parser extends Object{
    */
 
    private void formPart() {
-     accept(Token.L PAR, "'(' expected");
+     accept(Token.L_PAR,"'(' expected");
      parameterSpecification();
-     while (bas)
-
+     //while (bas)
+   }
 
     
 
@@ -119,11 +119,12 @@ public class Parser extends Object{
    */
    private void parameterSpecification() {
      identifierList();
-     accept(Token.)
-         
+     //accept(Token.)
+    }        
    /*
    declarativePart = { basicDeclaration }
    */
+	     
    private void declarativePart(){
       while (basicDeclarationHandles.contains(token.code))
          basicDeclaration();
