@@ -112,7 +112,7 @@ public class Parser extends Object{
      //while (bas)
    }
 
-    
+
 
    /*
    parameterSpecification = identifierList ":" mode <type>name
@@ -120,11 +120,11 @@ public class Parser extends Object{
    private void parameterSpecification() {
      identifierList();
      //accept(Token.)
-    }        
+    }
    /*
    declarativePart = { basicDeclaration }
    */
-	     
+
    private void declarativePart(){
       while (basicDeclarationHandles.contains(token.code))
          basicDeclaration();
@@ -132,7 +132,7 @@ public class Parser extends Object{
 
    /*
    basicDeclaration = objectDeclaration | numberDeclaration
-                    | typeDeclaration | subprogramBody   
+                    | typeDeclaration | subprogramBody
    */
    private void basicDeclaration(){
       switch (token.code){
@@ -172,12 +172,19 @@ public class Parser extends Object{
    /*
    typeDeclaration = "type" identifier "is" typeDefinition ";"
    */
-
+   void typeDeclaration(){
+     accept(Token.TYPE,"'type' expected");
+     identifierList();
+     accept(Token.IS,"'is' expected");
+     typeDefinition();
+   }
    /*
    typeDefinition = enumerationTypeDefinition | arrayTypeDefinition
                   | range | <type>name
    */
-
+   void typeDefinition(){
+     //FIXME
+   }
    /*
    enumerationTypeDefinition = "(" identifierList ")"
    */
@@ -195,9 +202,15 @@ public class Parser extends Object{
    */
 
    /*
-   identifier { "," identifer }
+   identifierList { "," identifer }
    */
+   void identifierList(){
+     //identifier();use accept
+     while (statementHandles.contains(token.COMMA))
+         statement();
+         //FIXME
 
+   }
    /*
    sequenceOfStatements = statement { statement }
    */
@@ -205,6 +218,7 @@ public class Parser extends Object{
       statement();
       while (statementHandles.contains(token.code))
          statement();
+         //FIXME
    }
 
    /*
@@ -240,14 +254,18 @@ public class Parser extends Object{
    /*
    nullStatement = "null" ";"
    */
+   void nullStatement(){
 
+   }
    /*
    loopStatement =
          [ iterationScheme ] "loop" sequenceOfStatements "end" "loop" ";"
 
    iterationScheme = "while" condition
    */
+   void loopStatement(){
 
+   }
    /*
    ifStatement =
          "if" condition "then" sequenceOfStatements
@@ -255,11 +273,17 @@ public class Parser extends Object{
          [ "else" sequenceOfStatements ]
          "end" "if" ";"
    */
+   void ifStatement(){
+
+   }
 
    /*
    exitStatement = "exit" [ "when" condition ] ";"
    */
+   void exitStatement(){
+     accept(Token.EXIT,"'exit' expected");
 
+   }
    /*
    assignmentStatement = <variable>name ":=" expression ";"
 
@@ -284,6 +308,8 @@ public class Parser extends Object{
    /*
    expression = relation { "and" relation } | { "or" relation }
    */
+
+
    private void expression(){
       relation();
       if (token.code == Token.AND)
@@ -302,6 +328,9 @@ public class Parser extends Object{
    relation = simpleExpression [ relationalOperator simpleExpression ]
    */
 
+   void relation(){
+
+   }
    /*
   simpleExpression =
          [ unaryAddingOperator ] term { binaryAddingOperator term }
@@ -319,11 +348,15 @@ public class Parser extends Object{
    /*
    term = factor { multiplyingOperator factor }
    */
+   void term(){
 
+   }
    /*
    factor = primary [ "**" primary ] | "not" primary
    */
+   void factor(){
 
+   }
    /*
    primary = numericLiteral | name | "(" expression ")"
    */
@@ -357,5 +390,7 @@ public class Parser extends Object{
    /*
    indexedComponent = "(" expression  { "," expression } ")"
    */
-
+   void indexedComponent(){
+     
+   }
 }
