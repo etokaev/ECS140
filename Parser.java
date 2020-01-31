@@ -99,17 +99,25 @@ public class Parser extends Object{
    private void subprogramSpecification() {
      accept(Token.PROC, "'procedure' expected");
      if (token.code == Token.ID)
-         token = scanner.nextToken();
-   }
+     {
+       token = scanner.nextToken();
+       formalPart();
+     }
+   }//FIXME not sure if correct
 
    /*
    formalPart = "(" parameterSpecification { ";" parameterSpecification } ")"
    */
 
-   private void formPart() {
+   private void formalPart() {
      accept(Token.L_PAR,"'(' expected");
      parameterSpecification();
-     //while (bas)
+     while(token.code == Token.SEMI)
+     {
+       token = scanner.nextToken();
+       parameterSpecification();
+     }
+     accept(Token.R_PAR,"')' expected");
    }
 
 
@@ -117,10 +125,16 @@ public class Parser extends Object{
    /*
    parameterSpecification = identifierList ":" mode <type>name
    */
+
+
    private void parameterSpecification() {
      identifierList();
-     //accept(Token.)
+     accept(Token.COLON,"':' expected");
+
+     accept(Token.TYPE,"'type' expected");
+     name();
     }
+
    /*
    declarativePart = { basicDeclaration }
    */
@@ -383,14 +397,16 @@ public class Parser extends Object{
    */
    private void name(){
       accept(Token.ID, "identifier expected");
-      if (token.code == Token.L_PAR)
-         indexedComponent();
+      if (token.code == Token.ID)
+         token = scanner.nextToken();
+
+
    }
 
    /*
    indexedComponent = "(" expression  { "," expression } ")"
    */
    void indexedComponent(){
-     
+
    }
 }
