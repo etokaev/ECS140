@@ -202,6 +202,12 @@ public class Parser extends Object{
    /*
    enumerationTypeDefinition = "(" identifierList ")"
    */
+   void enumerationTypeDefinition(){
+     accept(Token.L_PAR,"'(' expected");
+     identifierList();
+     accept(Token.R_PAR,"')' expected");
+
+   }
 
    /*
    arrayTypeDefinition = "array" "(" index { "," index } ")" "of" <type>name
