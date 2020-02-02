@@ -148,6 +148,7 @@ public class Parser extends Object{
    basicDeclaration = objectDeclaration | numberDeclaration
                     | typeDeclaration | subprogramBody
    */
+
    private void basicDeclaration(){
       switch (token.code){
          case Token.ID:
@@ -191,14 +192,18 @@ public class Parser extends Object{
      identifierList();
      accept(Token.IS,"'is' expected");
      typeDefinition();
+     accept(Token.SEMI, "smicolon expected");
    }
+
    /*
    typeDefinition = enumerationTypeDefinition | arrayTypeDefinition
                   | range | <type>name
    */
+
    void typeDefinition(){
      //FIXME
    }
+
    /*
    enumerationTypeDefinition = "(" identifierList ")"
    */
@@ -249,6 +254,7 @@ public class Parser extends Object{
 
    compoundStatement = ifStatement | loopStatement
    */
+
    private void statement(){
       switch (token.code){
          case Token.ID:
@@ -302,6 +308,11 @@ public class Parser extends Object{
    */
    void exitStatement(){
      accept(Token.EXIT,"'exit' expected");
+     if (token.code == Token.WHEN){
+       token = scanner.nextToken();
+       condition();
+     }
+     accept(Token.SEMI, " semicolon expected");
 
    }
    /*
@@ -349,12 +360,18 @@ public class Parser extends Object{
    */
 
    void relation(){
-
+     simpleExpression();
+     if (relationalOperator.contains(token.code)){
+        token = scanner.nextToken();
+        simpleExpression();
+      }
    }
+
    /*
   simpleExpression =
          [ unaryAddingOperator ] term { binaryAddingOperator term }
    */
+
    private void simpleExpression(){
       if (addingOperator.contains(token.code))
          token = scanner.nextToken();
@@ -369,7 +386,8 @@ public class Parser extends Object{
    term = factor { multiplyingOperator factor }
    */
    void term(){
-
+     factor();
+     while (multiplyingOperator.contains(token.))
    }
    /*
    factor = primary [ "**" primary ] | "not" primary
@@ -403,16 +421,20 @@ public class Parser extends Object{
    */
    private void name(){
       accept(Token.ID, "identifier expected");
-      if (token.code == Token.ID)
-         token = scanner.nextToken();
-
-
-   }
+      if (token.code == Token.L_PAR)
+         indexedComponent();   }
 
    /*
    indexedComponent = "(" expression  { "," expression } ")"
    */
-   void indexedComponent(){
 
+   private void indexedComponent(){
+     accept(Token.L_PAR, " '(' expected");
+     expression();
+     while (token.code == Token.COMMA){
+         token = scanner.nextToken();
+         expression();
+     }
+     accept(Token.R_PAR, " ')' expected");
    }
 }
