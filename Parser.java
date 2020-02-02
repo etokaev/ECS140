@@ -123,7 +123,7 @@ public class Parser extends Object{
 
 
    /*
-   parameterSpecification = identifierList ":" mode <type>name
+   parameterSpecification = identifierList ":" mode <type>identifer
    */
 
 
@@ -196,8 +196,7 @@ public class Parser extends Object{
    }
 
    /*
-   typeDefinition = enumerationTypeDefinition | arrayTypeDefinition
-                  | range | <type>name
+   typeDefinition = enumerationTypeDefinition | arrayTypeDefinition | range | <type>identifer
    */
 
    void typeDefinition(){
@@ -215,11 +214,11 @@ public class Parser extends Object{
    }
 
    /*
-   arrayTypeDefinition = "array" "(" index { "," index } ")" "of" <type>name
-   */
+   arrayTypeDefinition = "array" "(" index { "," index } ")" "of" <type>identifier
+    */
 
    /*
-   index = range | <type>name
+   index = range | <type>identifier
    */
 
    /*
@@ -284,8 +283,7 @@ public class Parser extends Object{
 
    }
    /*
-   loopStatement =
-         [ iterationScheme ] "loop" sequenceOfStatements "end" "loop" ";"
+   loopStatement = [ iterationScheme ] "loop" sequenceOfStatements "end" "loop" ";"
 
    iterationScheme = "while" condition
    */
@@ -318,7 +316,7 @@ public class Parser extends Object{
    /*
    assignmentStatement = <variable>name ":=" expression ";"
 
-   procedureCallStatement = <procedure>name [ actualParameterPart ] ";"
+   procedureCallStatement = <procedure>name ";"
    */
    private void assignmentOrCallStatement(){
       name();
@@ -337,7 +335,7 @@ public class Parser extends Object{
    }
 
    /*
-   expression = relation { "and" relation } | { "or" relation }
+   relation [{ "and" relation } | {"or" relation}]
    */
 
 
