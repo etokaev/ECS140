@@ -225,14 +225,33 @@ public class Parser extends Object{
    /*
    arrayTypeDefinition = "array" "(" index { "," index } ")" "of" <type>identifier
     */
-
+   void arrayTypeDefinition(){
+	   accept(Token.ARRAY,"'array' expected");
+	   accept(Token.L_PAR,"'(' expected");
+	   index();
+	   while (token.code == Token.COMMA){
+		   index();
+	   }
+       accept(Token.R_PAR,"')' expected");
+       accept(Token.OF,"'of' expected");
+	   accept(Token.ID, "identifier expected");
+   }
    /*
    index = range | <type>identifier
    */
-
+   void index(){
+	   
+   }
+   
    /*
    range = "range " simpleExpression ".." simpleExpression
    */
+   void range(){
+	   accept(Token.RANGE,"'range', expected");
+	   simpleExpression();
+	   accept(Token.THRU,"'..', expected");
+       simpleExpression();
+   }
 
    /*
    identifierList { "," identifer }
@@ -394,8 +413,8 @@ public class Parser extends Object{
    */
    void term(){
      factor();
-     while (multiplyingOperator.contains(token.))
-       //FIXME
+     while (multiplyingOperator.contains(token.code))
+		 factor();
    }
 
    /*
@@ -408,8 +427,11 @@ public class Parser extends Object{
      }
      else{
        primary();
-       if ()
-     }
+       if (token.code == Token.EXPO){
+		   token = scanner.nextToken();
+		   primary();
+	   }
+	 }
      
    }
    /*
