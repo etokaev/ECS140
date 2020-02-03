@@ -240,7 +240,11 @@ public class Parser extends Object{
    index = range | <type>identifier
    */
    void index(){
-	   
+	   if (token.code == Token.ID)
+		   accept(Token.ID, "identifier expected");
+	   else
+		   //FIXME check if it works correctly
+		   range();
    }
    
    /*
