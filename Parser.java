@@ -199,13 +199,22 @@ public class Parser extends Object{
    typeDefinition = enumerationTypeDefinition | arrayTypeDefinition | range | <type>identifer
    */
 
+   
    void typeDefinition(){
-     //FIXME
+    
+     switch(token.code){
+       case Token.ID:     
+         enumerationTypeDefinition();
+       //fixme
+     }
    }
+
+
 
    /*
    enumerationTypeDefinition = "(" identifierList ")"
    */
+
    void enumerationTypeDefinition(){
      accept(Token.L_PAR,"'(' expected");
      identifierList();
@@ -232,12 +241,12 @@ public class Parser extends Object{
      //identifier();use accept
      while (statementHandles.contains(token.COMMA))
          statement();
-         //FIXME
-
-   }
+         //FIXME] 
+         }
    /*
    sequenceOfStatements = statement { statement }
    */
+
    private void sequenceOfStatements(){
       statement();
       while (statementHandles.contains(token.code))
@@ -386,12 +395,22 @@ public class Parser extends Object{
    void term(){
      factor();
      while (multiplyingOperator.contains(token.))
+       //FIXME
    }
+
    /*
    factor = primary [ "**" primary ] | "not" primary
    */
    void factor(){
-
+     if (token.code == Token.NOT){
+       token = scanner.nextToken();
+       primary();
+     }
+     else{
+       primary();
+       if ()
+     }
+     
    }
    /*
    primary = numericLiteral | name | "(" expression ")"
@@ -420,7 +439,8 @@ public class Parser extends Object{
    private void name(){
       accept(Token.ID, "identifier expected");
       if (token.code == Token.L_PAR)
-         indexedComponent();   }
+         indexedComponent(); 
+   }
 
    /*
    indexedComponent = "(" expression  { "," expression } ")"
