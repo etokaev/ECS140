@@ -98,9 +98,8 @@ public class Parser extends Object{
 
    private void subprogramSpecification() {
      accept(Token.PROC, "'procedure' expected");
-     if (token.code == Token.ID)
+     if (token.code == Token.L_PAR)
      {
-       token = scanner.nextToken();
        formalPart();
      }
    }//FIXME not sure if correct
@@ -130,9 +129,11 @@ public class Parser extends Object{
    private void parameterSpecification() {
      identifierList();
      accept(Token.COLON,"':' expected");
-
+     if (token.code == Token.IN)
+       token = scanner.nextToken();
+     if (token.code == Token.OUT)
+       token = scanner.nextToken();
      accept(Token.TYPE,"'type' expected");
-     name();
     }
 
    /*
@@ -194,6 +195,7 @@ public class Parser extends Object{
      typeDefinition();
      accept(Token.SEMI, "smicolon expected");
    }
+   //FIXME:193
 
    /*
    typeDefinition = enumerationTypeDefinition | arrayTypeDefinition | range | <type>identifier
@@ -204,15 +206,15 @@ public class Parser extends Object{
     
      switch(token.code){
        case Token.L_PAR:     
-         enumerationTypeDefinition();
-		 break;
-	   case Token.ARRAY:
-		 arrayTypeDefinition();
-		 break;
-	   case Token.RANGE:
+             enumerationTypeDefinition();
+	     break;
+       case Token.ARRAY:
+	     arrayTypeDefinition();
+	     break;
+       case Token.RANGE:
 	     range();
-		 break;
-	   case Token.ID:
+	     break;
+       case Token.ID:
 	     accept(Token.ID, "identifier expected");
        //fixme
 	    default: fatalError("error in typeDefinition part");
@@ -240,22 +242,24 @@ public class Parser extends Object{
 	   accept(Token.L_PAR,"'(' expected");
 	   index();
 	   while (token.code == Token.COMMA){
+                   token = scanner.nextToken();
 		   index();
 	   }
-       accept(Token.R_PAR,"')' expected");
-       accept(Token.OF,"'of' expected");
-	   accept(Token.ID, "identifier expected");
+           accept(Token.R_PAR,"')' expected");
+           accept(Token.OF,"'of' expected");
+           accept(Token.ID, "identifier expected");
    }
    
    /*
    index = range | <type>identifier
    */
    void index(){
-	   if (token.code == Token.ID)
-		   accept(Token.ID, "identifier expected");
-	   else
-		   //FIXME check if it works correctly
-		   range();
+	   if (token.code == Token.RANGE)
+	     range();
+           else if (token.code == Token.ID){
+             accept(Token.ID, "identifier expected");
+           }
+           else fatalError("error in index type");
    }
    
    /*
@@ -263,18 +267,22 @@ public class Parser extends Object{
    */
    void range(){
 	   accept(Token.RANGE,"'range', expected");
-	   simpleExpression();
+	   expression();
 	   accept(Token.THRU,"'..', expected");
-       simpleExpression();
-   }
+           expression();
+           }
 
    /*
    identifierList = identifier { "," identifier }
    */
    void identifierList(){
 	   accept(Token.ID,"'identifier' expected");
-	   while (token.code == Token.COMMA)
+	   while (token.code == Token.COMMA){
 		 token = scanner.nextToken();
+                 accept(Token.ID,"'identifier' expected");
+
+           }
+
         }//FIXME if broken
    /*
    sequenceOfStatements = statement { statement }
@@ -392,7 +400,7 @@ public class Parser extends Object{
          expression();
       }
       accept(Token.SEMI, "semicolon expected");
-   }
+   }//FIXME need to except name();
 
    /*
    condition = <boolean>expression
@@ -452,8 +460,10 @@ public class Parser extends Object{
    */
    void term(){
      factor();
-     while (multiplyingOperator.contains(token.code))
+     while (multiplyingOperator.contains(token.code)){
+        token = scanner.nextToken();
 		 factor();
+     }
    }
 
    /*
