@@ -123,7 +123,7 @@ public class Parser extends Object{
 
 
    /*
-   parameterSpecification = identifierList ":" mode <type>identifer
+   parameterSpecification = identifierList ":" mode <type>
    */
 
 
@@ -196,16 +196,26 @@ public class Parser extends Object{
    }
 
    /*
-   typeDefinition = enumerationTypeDefinition | arrayTypeDefinition | range | <type>identifer
+   typeDefinition = enumerationTypeDefinition | arrayTypeDefinition | range | <type>identifier
    */
 
    
    void typeDefinition(){
     
      switch(token.code){
-       case Token.ID:     
+       case Token.L_PAR:     
          enumerationTypeDefinition();
+		 break;
+	   case Token.ARRAY:
+		 arrayTypeDefinition();
+		 break;
+	   case Token.RANGE:
+	     range();
+		 break;
+	   case Token.ID:
+	     accept(Token.ID, "identifier expected");
        //fixme
+	    default: fatalError("error in typeDefinition part");
      }
    }
 
@@ -236,6 +246,7 @@ public class Parser extends Object{
        accept(Token.OF,"'of' expected");
 	   accept(Token.ID, "identifier expected");
    }
+   
    /*
    index = range | <type>identifier
    */
@@ -258,14 +269,13 @@ public class Parser extends Object{
    }
 
    /*
-   identifierList { "," identifer }
+   identifierList = identifier { "," identifier }
    */
    void identifierList(){
-     //identifier();use accept
-     while (statementHandles.contains(token.COMMA))
-         statement();
-         //FIXME] 
-         }
+	   accept(Token.ID,"'identifier' expected");
+	   while (token.code == Token.COMMA)
+		 token = scanner.nextToken();
+        }//FIXME if broken
    /*
    sequenceOfStatements = statement { statement }
    */
@@ -274,7 +284,6 @@ public class Parser extends Object{
       statement();
       while (statementHandles.contains(token.code))
          statement();
-         //FIXME
    }
 
    /*
@@ -312,7 +321,8 @@ public class Parser extends Object{
    nullStatement = "null" ";"
    */
    void nullStatement(){
-
+      accept(Token.NULL,"'null' expected");
+	  accept(Token.SEMI,"';' expected");
    }
    /*
    loopStatement = [ iterationScheme ] "loop" sequenceOfStatements "end" "loop" ";"
@@ -320,7 +330,15 @@ public class Parser extends Object{
    iterationScheme = "while" condition
    */
    void loopStatement(){
-
+      if(token.code == Token.WHILE){
+		  token = scanner.nextToken();
+		  condition();
+	  }
+	  accept(Token.LOOP,"'loop' expected");
+	  sequenceOfStatements();
+	  accept(Token.END,"'end' expected");
+	  accept(Token.LOOP,"'loop' expected");
+	  accept(Token.SEMI,"';' expected");
    }
    /*
    ifStatement =
@@ -330,7 +348,24 @@ public class Parser extends Object{
          "end" "if" ";"
    */
    void ifStatement(){
-
+      accept(Token.IF,"'if' expected");
+	  condition();
+	  accept(Token.THEN,"'then' expected");
+	  sequenceOfStatements();
+	  while(token.code == Token.ELSIF){
+		  token = scanner.nextToken();
+		  condition();
+		  accept(Token.THEN,"'then' expected");
+		  sequenceOfStatements();
+	  }
+	  if(token.code == Token.ELSE){
+		token = scanner.nextToken();
+		sequenceOfStatements();
+	  }
+	  accept(Token.END,"'end' expected");
+	  accept(Token.IF,"'if' expected");
+	  accept(Token.SEMI,"';' expected");
+	  
    }
 
    /*
