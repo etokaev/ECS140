@@ -87,6 +87,7 @@ public class Parser extends Object {
           "end" [ <procedure>identifier ] ";"
     */
     private void subprogramBody() {
+        debug("subprogramBody");
         subprogramSpecification();
         accept(Token.IS, "'is' expected");
         declarativePart();
@@ -103,6 +104,7 @@ public class Parser extends Object {
     */
 
     private void subprogramSpecification() {
+        debug("subprogramBody");
         accept(Token.PROC, "'procedure' expected");
         token = scanner.nextToken();
         if (token.code == Token.L_PAR) {
@@ -115,6 +117,7 @@ public class Parser extends Object {
     */
 
     private void formalPart() {
+        debug("formalPart");
         accept(Token.L_PAR, "'(' expected");
         parameterSpecification();
         while (token.code == Token.SEMI) {
@@ -132,6 +135,7 @@ public class Parser extends Object {
 
 
     private void parameterSpecification() {
+        debug("parameterSpecification");
         identifierList();
         accept(Token.COLON, "':' expected");
         if (token.code == Token.IN)
@@ -146,6 +150,7 @@ public class Parser extends Object {
     */
 
     private void declarativePart() {
+        debug("declarativePart");
         while (basicDeclarationHandles.contains(token.code))
             basicDeclaration();
     }
@@ -156,6 +161,7 @@ public class Parser extends Object {
     */
 
     private void basicDeclaration() {
+        debug("basicDeclaration");
         switch (token.code) {
             case Token.ID:
                 numberOrObjectDeclaration();
@@ -179,6 +185,7 @@ public class Parser extends Object {
           identifierList ":" "constant" ":=" <static>expression ";"
     */
     private void numberOrObjectDeclaration() {
+        debug("numberOrObjectDeclaration");
         identifierList();
         accept(Token.COLON, "':' expected");
         if (token.code == Token.CONST) {
@@ -194,6 +201,7 @@ public class Parser extends Object {
     typeDeclaration = "type" identifier "is" typeDefinition ";"
     */
     void typeDeclaration() {
+        debug("typeDeclaration");
         accept(Token.TYPE, "'type' expected");
         identifierList();
         accept(Token.IS, "'is' expected");
@@ -208,7 +216,7 @@ public class Parser extends Object {
 
 
     void typeDefinition() {
-
+        debug("typeDefinition");
         switch (token.code) {
             case Token.L_PAR:
                 enumerationTypeDefinition();
@@ -235,6 +243,7 @@ public class Parser extends Object {
     */
 
     void enumerationTypeDefinition() {
+        debug("enumerationTypeDefinition");
         accept(Token.L_PAR, "'(' expected");
         identifierList();
         accept(Token.R_PAR, "')' expected");
@@ -245,6 +254,7 @@ public class Parser extends Object {
     arrayTypeDefinition = "array" "(" index { "," index } ")" "of" <type>identifier
      */
     void arrayTypeDefinition() {
+        debug("arrayTypeDefinition");
         accept(Token.ARRAY, "'array' expected");
         accept(Token.L_PAR, "'(' expected");
         index();
