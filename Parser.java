@@ -98,6 +98,7 @@ public class Parser extends Object {
 
     private void subprogramSpecification() {
         accept(Token.PROC, "'procedure' expected");
+        token = scanner.nextToken();
         if (token.code == Token.L_PAR) {
             formalPart();
         }
@@ -191,7 +192,7 @@ public class Parser extends Object {
         identifierList();
         accept(Token.IS, "'is' expected");
         typeDefinition();
-        accept(Token.SEMI, "smicolon expected");
+        accept(Token.SEMI, "semicolon expected");
     }
     //FIXME:193
 
@@ -275,6 +276,7 @@ public class Parser extends Object {
     */
     void identifierList() {
         accept(Token.ID, "'identifier' expected");
+        token = scanner.nextToken();
         while (token.code == Token.COMMA) {
             token = scanner.nextToken();
             accept(Token.ID, "'identifier' expected");
