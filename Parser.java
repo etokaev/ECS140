@@ -57,6 +57,12 @@ public class Parser extends Object {
         statementHandles.add(Token.WHILE);
     }
 
+    void debug(String msg){
+        if(true){
+	    System.err.println(msg);
+	}
+    }
+
     private void accept(int expected, String errorMessage) {
         if (token.code != expected)
             fatalError(errorMessage);
@@ -215,7 +221,8 @@ public class Parser extends Object {
                 break;
             case Token.ID:
                 accept(Token.ID, "identifier expected");
-                //fixme
+                break;
+		//fixme
             default:
                 fatalError("error in typeDefinition part");
         }
