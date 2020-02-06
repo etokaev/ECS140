@@ -271,6 +271,7 @@ public class Parser extends Object {
     index = range | <type>identifier
     */
     void index() {
+        debug("index");
         if (token.code == Token.RANGE)
             range();
         else if (token.code == Token.ID) {
@@ -282,6 +283,7 @@ public class Parser extends Object {
     range = "range " simpleExpression ".." simpleExpression
     */
     void range() {
+        debug("range");
         accept(Token.RANGE, "'range', expected");
         expression();
         accept(Token.THRU, "'..', expected");
@@ -291,7 +293,8 @@ public class Parser extends Object {
     /*
     identifierList = identifier { "," identifier }
     */
-    void identifierList() {
+    void identifierList() { 
+        debug("identifierList");
         accept(Token.ID, "'identifier' expected");
         token = scanner.nextToken();
         while (token.code == Token.COMMA) {
@@ -306,6 +309,7 @@ public class Parser extends Object {
     */
 
     private void sequenceOfStatements() {
+        debug("sequenceOfStatements");
         statement();
         while (statementHandles.contains(token.code))
             statement();
@@ -321,6 +325,7 @@ public class Parser extends Object {
     */
 
     private void statement() {
+        debug("statement");
         switch (token.code) {
             case Token.ID:
                 assignmentOrCallStatement();
@@ -347,6 +352,7 @@ public class Parser extends Object {
     nullStatement = "null" ";"
     */
     void nullStatement() {
+        debug("nullStatement");
         accept(Token.NULL, "'null' expected");
         accept(Token.SEMI, "';' expected");
     }
@@ -356,6 +362,7 @@ public class Parser extends Object {
     iterationScheme = "while" condition
     */
     void loopStatement() {
+        debug("loopStatement");
         if (token.code == Token.WHILE) {
             token = scanner.nextToken();
             condition();
@@ -374,6 +381,7 @@ public class Parser extends Object {
           "end" "if" ";"
     */
     void ifStatement() {
+        debug("ifStatement");
         accept(Token.IF, "'if' expected");
         condition();
         accept(Token.THEN, "'then' expected");
@@ -398,6 +406,7 @@ public class Parser extends Object {
     exitStatement = "exit" [ "when" condition ] ";"
     */
     void exitStatement() {
+        debug("exitStatement");
         accept(Token.EXIT, "'exit' expected");
         if (token.code == Token.WHEN) {
             token = scanner.nextToken();
@@ -412,6 +421,7 @@ public class Parser extends Object {
     procedureCallStatement = <procedure>name ";"
     */
     private void assignmentOrCallStatement() {
+        debug("assignmentOrCallStatement");
         name();
         if (token.code == Token.GETS) {
             token = scanner.nextToken();
@@ -424,6 +434,7 @@ public class Parser extends Object {
     condition = <boolean>expression
     */
     private void condition() {
+        debug("condition");
         expression();
     }
 
@@ -433,6 +444,7 @@ public class Parser extends Object {
 
 
     private void expression() {
+        debug("expression");
         relation();
         if (token.code == Token.AND)
             while (token.code == Token.AND) {
@@ -451,6 +463,7 @@ public class Parser extends Object {
     */
 
     void relation() {
+        debug("relation");
         simpleExpression();
         if (relationalOperator.contains(token.code)) {
             token = scanner.nextToken();
@@ -464,6 +477,7 @@ public class Parser extends Object {
    */
 
     private void simpleExpression() {
+        debug("simpleExpression");
         if (addingOperator.contains(token.code))
             token = scanner.nextToken();
         term();
@@ -477,6 +491,7 @@ public class Parser extends Object {
     term = factor { multiplyingOperator factor }
     */
     void term() {
+        debug("term");
         factor();
         while (multiplyingOperator.contains(token.code)) {
             token = scanner.nextToken();
@@ -488,6 +503,7 @@ public class Parser extends Object {
     factor = primary [ "**" primary ] | "not" primary
     */
     void factor() {
+        debug("factor");
         if (token.code == Token.NOT) {
             token = scanner.nextToken();
             primary();
@@ -504,6 +520,7 @@ public class Parser extends Object {
     primary = numericLiteral | name | "(" expression ")"
     */
     void primary() {
+        debug("primary");
         switch (token.code) {
             case Token.INT:
             case Token.CHAR:
@@ -526,6 +543,7 @@ public class Parser extends Object {
     name = identifier [ indexedComponent ]
     */
     private void name() {
+        debug("name");
         accept(Token.ID, "identifier expected");
         if (token.code == Token.L_PAR)
             indexedComponent();
@@ -536,6 +554,7 @@ public class Parser extends Object {
     */
 
     private void indexedComponent() {
+        debug("indexedComponent");
         accept(Token.L_PAR, " '(' expected");
         expression();
         while (token.code == Token.COMMA) {
