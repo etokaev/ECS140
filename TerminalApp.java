@@ -5,17 +5,19 @@ in the last few lines of the TerminalApp constructor.
 
 import java.io.*;
 
+
 public class TerminalApp{
 
    // Data model
    private Chario chario;
    private Scanner scanner;
    private Parser parser;
+   public static String argsGlobal[] = null;
 
-   public TerminalApp(){
+   public TerminalApp(String array[]){
       java.util.Scanner reader = new java.util.Scanner(System.in);
-      System.out.print("Enter the input file name: ");
-      String filename = reader.nextLine();
+      //System.out.print("Enter the input file name: ");
+      String filename = array[0];
       FileInputStream stream;
       try{
          stream = new FileInputStream(filename);
@@ -56,6 +58,8 @@ public class TerminalApp{
    }
 
    public static void main(String args[]){
-      new TerminalApp();
+      //TerminalApp.argsGlobal[0] = args[0];
+      //System.out.print(argsGlobal[0]);
+      new TerminalApp(args);
    }
 }
