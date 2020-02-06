@@ -231,11 +231,12 @@ public class Parser extends Object {
                 break;
             case Token.ID:
                 accept(Token.ID, "identifier expected");
-                token = scanner.nextToken(); //added
+                
                 break;
 		//fixme
             default:
                 fatalError("error in typeDefinition part");
+                break;
         }
     }
 
