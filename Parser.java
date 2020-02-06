@@ -144,7 +144,7 @@ public class Parser extends Object {
         if (token.code == Token.OUT)
             token = scanner.nextToken();
         accept(Token.TYPE, "'type' expected");
-        token = scanner.nextToken(); //added
+        
     }
 
     /*
@@ -299,8 +299,8 @@ public class Parser extends Object {
     */
     void identifierList() { 
         debug("identifierList");
-        accept(Token.ID, "'identifier' expected");
-     //   token = scanner.nextToken();
+        //accept(Token.ID, "'identifier' expected");
+        token = scanner.nextToken();
         while (token.code == Token.COMMA) {
             token = scanner.nextToken();
             accept(Token.ID, "'identifier' expected");
