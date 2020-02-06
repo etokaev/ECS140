@@ -1,3 +1,8 @@
+//ECS140
+//Assignment 2
+//February 5, 2020AD
+//Developed by Emil Tokaev(914187873), Christopher Morgan-Sudduth(916216315)
+
 // Parsing shell partially completed
 
 // Note that EBNF rules are provided in comments
