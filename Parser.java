@@ -58,7 +58,7 @@ public class Parser extends Object {
     }
 
     void debug(String msg){
-        if(true){
+        if(false){
 	    System.err.println(msg);
 	}
     }
