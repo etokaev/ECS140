@@ -143,7 +143,8 @@ public class Parser extends Object {
             token = scanner.nextToken();
         if (token.code == Token.OUT)
             token = scanner.nextToken();
-        accept(Token.TYPE, "'type' expected");
+        //token = scanner.nextToken();
+        accept(Token.ID, "'146 type' expected");
         
     }
 
