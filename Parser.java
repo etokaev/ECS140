@@ -3,11 +3,6 @@
 //February 5, 2020AD
 //Developed by Emil Tokaev(914187873), Christopher Morgan-Sudduth(916216315)
 
-// Parsing shell partially completed
-
-// Note that EBNF rules are provided in comments
-// Just add new methods below rules without them
-
 import java.util.*;
 
 public class Parser extends Object {
@@ -15,6 +10,7 @@ public class Parser extends Object {
     private Chario chario;
     private Scanner scanner;
     private Token token;
+	private SymbolTable table;
 
     private Set < Integer > addingOperator,
         multiplyingOperator,
@@ -78,12 +74,41 @@ public class Parser extends Object {
         chario.putError(errorMessage);
         throw new RuntimeException("Fatal error");
     }
+	
+    private SymbolEntry enterId(){
+      SymbolEntry entry = null;
+      if (token.code == Token.ID)
+         entry = table.enterSymbol(token.string);
+      else
+         fatalError("identifier expected");
+      token = scanner.nextToken();
+      return entry;
+	}
 
+    private SymbolEntry findId(){
+      SymbolEntry entry = null;
+      if (token.code == Token.ID)
+         entry = table.findSymbol(token.string);
+      else
+         fatalError("identifier expected");
+      token = scanner.nextToken();
+      return entry;
+	}	
+	
+    private void initTable(){
+      table = new SymbolTable(chario);
+      table.enterScope();
+      table.enterSymbol("BOOLEAN");
+      table.enterSymbol("CHAR");
+      table.enterSymbol("INTEGER");
+      table.enterSymbol("TRUE");
+      table.enterSymbol("FALSE");
+	} 	
     public void parse() {
         subprogramBody();
         accept(Token.EOF, "extra symbols after logical end of program");
     }
-
+     
     /*
     subprogramBody =
           subprogramSpecification "is"
@@ -91,6 +116,9 @@ public class Parser extends Object {
           "begin" sequenceOfStatements
           "end" [ <procedure>identifier ] ";"
     */
+	
+	
+	
     private void subprogramBody() {
         debug("subprogramBody");
         subprogramSpecification();
