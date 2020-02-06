@@ -104,13 +104,14 @@ public class Parser extends Object {
     */
 
     private void subprogramSpecification() {
-        debug("subprogramBody");
+        debug("subprogramSpecification");
         accept(Token.PROC, "'procedure' expected");
         token = scanner.nextToken();
+        
         if (token.code == Token.L_PAR) {
             formalPart();
         }
-    } //FIXME not sure if correct
+    } //FIXME not sure if correct2
 
     /*
     formalPart = "(" parameterSpecification { ";" parameterSpecification } ")"
@@ -143,6 +144,7 @@ public class Parser extends Object {
         if (token.code == Token.OUT)
             token = scanner.nextToken();
         accept(Token.TYPE, "'type' expected");
+        token = scanner.nextToken(); //added
     }
 
     /*
@@ -208,7 +210,7 @@ public class Parser extends Object {
         typeDefinition();
         accept(Token.SEMI, "semicolon expected");
     }
-    //FIXME:193
+  
 
     /*
     typeDefinition = enumerationTypeDefinition | arrayTypeDefinition | range | <type>identifier
@@ -229,6 +231,7 @@ public class Parser extends Object {
                 break;
             case Token.ID:
                 accept(Token.ID, "identifier expected");
+                token = scanner.nextToken(); //added
                 break;
 		//fixme
             default:
@@ -296,7 +299,7 @@ public class Parser extends Object {
     void identifierList() { 
         debug("identifierList");
         accept(Token.ID, "'identifier' expected");
-        token = scanner.nextToken();
+     //   token = scanner.nextToken();
         while (token.code == Token.COMMA) {
             token = scanner.nextToken();
             accept(Token.ID, "'identifier' expected");
@@ -427,6 +430,9 @@ public class Parser extends Object {
             token = scanner.nextToken();
             expression();
         }
+        //else {}
+            
+        
         accept(Token.SEMI, "semicolon expected");
     } //FIXME need to except name();
 
